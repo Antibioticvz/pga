@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
@@ -7,6 +8,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+import Button from '@material-ui/core/Button'
 
 const styles = theme => ({
   root: {
@@ -20,15 +22,8 @@ const styles = theme => ({
 })
 
 
-const rows = [
-  { firstName: 'Alex', lastName: 'Abrams', score: 99 },
-  { firstName: 'Junge', lastName: 'AAJohn', score: 99 },
-  { firstName: 'Vera', lastName: 'Rob', score: 77 },
-  { firstName: 'Geary', lastName: 'Alice', score: 77 },
-]
-
-function SimpleTable(props) {
-  const { classes } = props
+const SimpleTable = (props) => {
+  const { classes, delPlayer, rows } = props
 
   const sortedData = [...rows].sort((a, b) => (
     (a.score < b.score) ? 1 : (a.score === b.score) ? ((a.lastName > b.lastName) ? 1 : -1) : -1))
@@ -48,7 +43,11 @@ function SimpleTable(props) {
             <TableRow key={i}>
               <TableCell align="center">{`${row.firstName}, ${row.lastName}`}</TableCell>
               <TableCell align="center">{row.score}</TableCell>
-              <TableCell align="center">Delete</TableCell>
+              <TableCell align="center">
+                <Button variant="text" color="primary" onClick={() => delPlayer(row.firstName, row.lastName)}>
+                  Delete
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -58,7 +57,14 @@ function SimpleTable(props) {
 }
 
 SimpleTable.propTypes = {
-  // classes: PropTypes.object.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  classes: PropTypes.object.isRequired,
+  rows: PropTypes.arrayOf(PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    score: PropTypes.number.isRequired,
+  }).isRequired).isRequired,
+  delPlayer: PropTypes.func.isRequired,
 }
 
 export default withStyles(styles)(SimpleTable)
